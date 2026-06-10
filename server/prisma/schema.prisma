@@ -1,0 +1,151 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  EMPLOYEE
+  MANAGER
+}
+
+enum OrderStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskStatus {
+  OPEN
+  IN_PROGRESS
+  DONE
+  CANCELLED
+}
+
+enum ReportType {
+  BUG
+  SALES
+  INVENTORY
+  SYSTEM
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String   @unique
+  password   String
+  role       Role     @default(EMPLOYEE)
+  is_active  Boolean  @default(true)
+  created_at DateTime @default(now())
+
+  orders_created   Order[]          @relation("OrderCreatedBy")
+  tasks_created    Task[]           @relation("TaskCreatedBy")
+  task_assignments TaskAssignment[]
+  notifications    Notification[]
+  reports          Report[]
+
+  @@index([email])
+}
+
+model Item {
+  id          Int     @id @default(autoincrement())
+  sku         String  @unique
+  name        String  @default("")
+  description String?
+  price       Decimal
+  is_ordered  Boolean @default(false)
+  qty         Int
+
+  order_items OrderItem[]
+
+  @@index([sku])
+}
+
+model Order {
+  id             Int         @id @default(autoincrement())
+  created_by     Int
+  created_at     DateTime    @default(now())
+  updated_at     DateTime    @updatedAt
+  status         OrderStatus @default(PENDING)
+  customer_name  String
+  customer_phone String
+
+  creator     User        @relation("OrderCreatedBy", fields: [created_by], references: [id])
+  order_items OrderItem[]
+
+  @@index([created_by])
+}
+
+model OrderItem {
+  id       Int @id @default(autoincrement())
+  order_id Int
+  item_id  Int
+  quantity Int
+
+  order Order @relation(fields: [order_id], references: [id])
+  item  Item  @relation(fields: [item_id], references: [id])
+
+  @@index([order_id])
+  @@index([item_id])
+}
+
+model Task {
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String?
+  status      TaskStatus @default(OPEN)
+  due_date    DateTime?
+  created_at  DateTime   @default(now())
+  created_by  Int
+
+  creator       User             @relation("TaskCreatedBy", fields: [created_by], references: [id])
+  assignments   TaskAssignment[]
+  notifications Notification[]
+
+  @@index([created_by])
+}
+
+model TaskAssignment {
+  task_id     Int
+  user_id     Int
+  assigned_at DateTime @default(now())
+
+  task Task @relation(fields: [task_id], references: [id], onDelete: Cascade)
+  user User @relation(fields: [user_id], references: [id])
+
+  @@id([task_id, user_id])
+  @@index([user_id])
+}
+
+model Notification {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  task_id    Int?
+  title      String
+  message    String
+  is_read    Boolean  @default(false)
+  created_at DateTime @default(now())
+
+  user User  @relation(fields: [user_id], references: [id])
+  task Task? @relation(fields: [task_id], references: [id], onDelete: SetNull)
+
+  @@index([user_id])
+}
+
+model Report {
+  id          Int        @id @default(autoincrement())
+  description String
+  issued_by   Int
+  type        ReportType
+  created_at  DateTime   @default(now())
+
+  issuer User @relation(fields: [issued_by], references: [id])
+
+  @@index([issued_by])
+}
