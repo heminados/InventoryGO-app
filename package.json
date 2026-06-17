@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/heminados/InventoryGo-app/issues"
   },
-  "homepage": "https://github.com/heminados/InventoryGo-app#readme"
+  "homepage": "https://github.com/heminados/InventoryGo-app#readme",
+  "devDependencies": {
+    "@types/node": "^25.9.3"
+  }
 }

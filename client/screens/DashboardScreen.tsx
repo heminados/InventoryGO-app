@@ -4,8 +4,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { forceLogout } from "../utils/auth";
 import style from "../styles/DashboardScreenStyle";
+import { API_URL } from "../config/api";
 
-const API_BASE = "http://localhost:5001";
+const API = API_URL;
 
 type Stats = {
   totalStock: number;
@@ -23,7 +24,7 @@ const DashboardScreen = () => {
   const fetchStats = useCallback(async () => {
     try {
       const token = await AsyncStorage.getItem("token");
-      const res = await fetch(`${API_BASE}/dashboard/stats`, {
+      const res = await fetch(`${API}/dashboard/stats`, {
         headers: { Authorization: token ? `Bearer ${token}` : "" },
       });
       if (res.status === 401 || res.status === 403) {

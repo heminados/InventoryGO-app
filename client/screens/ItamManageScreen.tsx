@@ -10,6 +10,7 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../styles/ItamManageScreenStyle";
+import { API_URL } from "../config/api";
 
 type ItemDetails = {
   id: number;
@@ -38,7 +39,7 @@ export default function ItemManageScreen() {
       try {
         const token = await AsyncStorage.getItem("token");
         const res = await fetch(
-          `http://localhost:5001/items/details/${item.id}`,
+          `${API_URL}/items/details/${item.id}`,
           { headers: { Authorization: token ? `Bearer ${token}` : "" } }
         );
 

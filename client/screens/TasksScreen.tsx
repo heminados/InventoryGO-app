@@ -4,8 +4,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { forceLogout } from "../utils/auth";
 import style from "../styles/TasksScreenStyle";
+import { API_URL } from "../config/api";
 
-const API_BASE = "http://localhost:5001";
+const API = API_URL;
 
 type Task = {
   id: number;
@@ -22,7 +23,7 @@ const TasksScreen = () => {
   const fetchTasks = useCallback(async () => {
     try {
       const token = await AsyncStorage.getItem("token");
-      const res = await fetch(`${API_BASE}/tasks/my`, {
+      const res = await fetch(`${API}/tasks/my`, {
         headers: { Authorization: token ? `Bearer ${token}` : "" },
       });
       if (res.status === 401 || res.status === 403) {
@@ -56,7 +57,7 @@ const TasksScreen = () => {
   const handleComplete = async (id: number) => {
     try {
       const token = await AsyncStorage.getItem("token");
-      const res = await fetch(`${API_BASE}/tasks/${id}/complete`, {
+      const res = await fetch(`${API}/tasks/${id}/complete`, {
         method: "PATCH",
         headers: { Authorization: token ? `Bearer ${token}` : "" },
       });

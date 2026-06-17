@@ -8,11 +8,12 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { API_URL } from "../config/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../styles/LoginScreenStyles";
 //import { startNfcScan } from "../services/nfcService";
 
-const API_URL = "http://localhost:5001/auth/login";
+const API = `${API_URL}/auth/login`;
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -31,7 +32,7 @@ const LoginScreen = () => {
   const handleLogin = async () => {
     setError("");
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch(API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

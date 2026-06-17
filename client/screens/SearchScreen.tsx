@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import styles from "../styles/SearchScreenStyle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { forceLogout } from "../utils/auth";
+import { API_URL } from "../config/api";
 
 type Item = {
   id: number;
@@ -28,6 +29,8 @@ export default function SearchScreen() {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(false);
+
+const API = `${API_URL}/items/getAll`;
 
   useEffect(() => {
     const showSub = Keyboard.addListener("keyboardDidShow", (e) => {
@@ -59,7 +62,7 @@ export default function SearchScreen() {
         setLoading(true);
         const token = await AsyncStorage.getItem("token");
 
-        const res = await fetch("http://localhost:5001/items/getAll", {
+        const res = await fetch(API, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

@@ -13,8 +13,9 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { forceLogout } from "../utils/auth";
 import style from "../styles/OpenOrderScreenStyle";
+import { API_URL } from "../config/api";
 
-const API_BASE = "http://localhost:5001";
+const API = `${API_URL}/orders`;
 
 type Item = {
   id: number;
@@ -47,7 +48,7 @@ export default function OpenOrderScreen() {
     const fetchItems = async () => {
       try {
         const token = await AsyncStorage.getItem("token");
-        const res = await fetch(`${API_BASE}/items/getAll`, {
+        const res = await fetch(`${API}/items/getAll`, {
           headers: { Authorization: token ? `Bearer ${token}` : "" },
         });
         if (res.status === 401 || res.status === 403) {
@@ -152,7 +153,7 @@ export default function OpenOrderScreen() {
     try {
       setSubmitting(true);
       const token = await AsyncStorage.getItem("token");
-      const res = await fetch(`${API_BASE}/orders/create`, {
+      const res = await fetch(`${API}/orders/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
