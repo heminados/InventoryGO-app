@@ -19,6 +19,7 @@ import EmployeeManage from './components/EmployeeManage';
 import TaskManage from './components/TaskManage';
 import ManageItems from './components/Inventory';
 import OrderManage from './components/OrderManage';
+import Reports from './components/Reports';
 
 // Width of the left sidebar in pixels
 const SIDEBAR_WIDTH = 220;
@@ -157,6 +158,7 @@ function AdminLayout({ token, onLogout }: { token: string; onLogout: () => void 
             {/* token is passed so EmployeeManage can make authenticated API calls */}
             <Route path="/employees" element={<EmployeeManage token={token} />} />
             <Route path="/items" element={<ManageItems token={token} />} />
+            <Route path="/reports" element={<Reports token={token} />} />
           </Routes>
         </Box>
       </Box>

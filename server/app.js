@@ -6,6 +6,7 @@ import taskRoutes from './routes/task.routes.js';
 import orderRoutes from './routes/order.routes.js';
 import dashboardRoutes from './routes/dashboard.routes.js';
 import userRoutes from './routes/user.routes.js';
+import reportRoutes from './routes/report.routes.js';
 
 const app = express();
 
@@ -21,5 +22,6 @@ app.use('/tasks', taskRoutes);
 app.use('/orders', orderRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/users', userRoutes);
+app.use('/reports', reportRoutes);
 
 export default app;

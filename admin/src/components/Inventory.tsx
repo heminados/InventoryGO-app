@@ -114,7 +114,8 @@ export default function Inventory({ token }: { token: string }) {
       const res = await fetch(`${API}/items/update/${selectedItem.id}`, {
         method: 'PUT',
         headers,
-        body: JSON.stringify(editForm),
+        // source tells the backend this operation came from the Admin web app (for reports)
+        body: JSON.stringify({ ...editForm, source: 'admin' }),
       });
       if (!res.ok) throw new Error('Update failed');
       await fetchItems(); // refresh the table so changes are immediately visible
@@ -138,7 +139,8 @@ export default function Inventory({ token }: { token: string }) {
       const res = await fetch(`${API}/items/add`, {
         method: 'POST',
         headers,
-        body: JSON.stringify(addForm),
+        // source tells the backend this operation came from the Admin web app (for reports)
+        body: JSON.stringify({ ...addForm, source: 'admin' }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Create failed');
