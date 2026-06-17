@@ -6,10 +6,12 @@ export const addItem = async (sku, name, description, price, qty) => {
     });
 };
 
-export const updateItem = async (id, sku, name, description, price, qty) => {
+// is_ordered is reused as the "requires inspection" flag (no schema change).
+// When undefined (e.g. the mobile client doesn't send it) Prisma leaves it untouched.
+export const updateItem = async (id, sku, name, description, price, qty, is_ordered) => {
     return prisma.item.update({
         where: { id: Number(id) },
-        data: { sku, name, description, price, qty },
+        data: { sku, name, description, price, qty, is_ordered },
     });
 };
 

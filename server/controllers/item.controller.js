@@ -12,9 +12,19 @@ export const addItem = async (req, res) => {
 
 export const updateItem = async (req, res) => {
     const { id } = req.params;
-    const { sku, name, description, price, qty } = req.body;
+    const { sku, name, description, price, qty, is_ordered } = req.body;
     try {
-        const item = await itemService.updateItem(id, sku, name, description, price, qty);
+        // Items flagged for inspection (is_ordered) are locked for employees.
+        // Only admins/managers can change them — including clearing the flag.
+        if (req.user.role === 'EMPLOYEE') {
+            const existing = await itemService.getItemById(id);
+            if (existing?.is_ordered) {
+                return res.status(403).json({
+                    message: 'This item requires inspection and is locked. Please contact a manager.',
+                });
+            }
+        }
+        const item = await itemService.updateItem(id, sku, name, description, price, qty, is_ordered);
         res.status(200).json(item);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });

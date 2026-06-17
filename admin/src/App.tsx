@@ -11,12 +11,13 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import PeopleIcon from '@mui/icons-material/People';
 import LogoutIcon from '@mui/icons-material/Logout';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 
 import AdminLogin from './components/AdminLogin';
 import HomePage from './components/HomePage';
 import EmployeeManage from './components/EmployeeManage';
 import TaskManage from './components/TaskManage';
-import ManageItems from './components/ManageItems';
+import ManageItems from './components/Inventory';
 import OrderManage from './components/OrderManage';
 
 // Width of the left sidebar in pixels
@@ -29,6 +30,7 @@ const NAV_ITEMS = [
   { label: 'Orders', icon: <ShoppingCartIcon />, to: '/orders' },
   { label: 'Tasks', icon: <AssignmentIcon />, to: '/tasks' },
   { label: 'User Management', icon: <PeopleIcon />, to: '/employees' },
+  { label: 'Reports', icon: <AssessmentIcon />, to: '/reports' },
 ];
 
 // A single sidebar link. Highlights itself blue when its route is active.
@@ -77,7 +79,7 @@ function AdminLayout({ token, onLogout }: { token: string; onLogout: () => void 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f5f7fb' }}>
 
-      {/* ── Left sidebar ── always visible, does not scroll away */}
+      {/* ─ Left sidebar ─ always visible, does not scroll away */}
       <Drawer
         variant="permanent"
         sx={{
@@ -154,7 +156,7 @@ function AdminLayout({ token, onLogout }: { token: string; onLogout: () => void 
             <Route path="/tasks" element={<TaskManage token={token} />} />
             {/* token is passed so EmployeeManage can make authenticated API calls */}
             <Route path="/employees" element={<EmployeeManage token={token} />} />
-            <Route path="/items" element={<ManageItems />} />
+            <Route path="/items" element={<ManageItems token={token} />} />
           </Routes>
         </Box>
       </Box>
