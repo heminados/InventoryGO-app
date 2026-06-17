@@ -1,5 +1,5 @@
 
 ## instructions
-    - start backend using "npm run dev"
-    - start frontend app using "cd client/npx expo start"
-    - start client admin page using cd 
+    - start inventoryGO API srever using "npm run serverDev"
+    - start inventoryGO site using "npm run siteDev"
+    - start inventoryGO app using "npm run appDev"

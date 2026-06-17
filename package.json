@@ -9,7 +9,8 @@
   "description": "=======/*front-end*/======= --try cover menu for the whole view area --add dropdown menu when searching --add item info screen",
   "main": "index.js",
   "scripts": {
-    "adminDev": "cd admin && npm start",
+    "serverDev": "cd server && npx nodemon server.js",
+    "siteDev": "cd admin && npm start",
     "appDev": "cd client && npx expo start --ios"
   },
   "repository": {
