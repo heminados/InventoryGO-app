@@ -45,9 +45,15 @@ export default function MainDrawer() {
         </View>
       )}
       screenOptions={() => ({
+        headerShown: true,
         headerStyle: styles.headerStyle,
         headerTintColor: "#F5F5F5",
         headerTitleStyle: styles.headerTitleStyle,
+        // Remove the header's bottom shadow line so it blends into the screen
+        headerShadowVisible: false,
+        // Match the scene container background to the header/screens so no
+        // white seam shows in the gap between the header and screen content
+        sceneStyle: styles.sceneStyle,
         drawerStyle: styles.drawerStyle,
         drawerActiveTintColor: "#F5F5F5",
         drawerInactiveTintColor: "#aaa",

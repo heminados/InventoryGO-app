@@ -40,6 +40,21 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
+  // Secondary (outlined) button so it reads as a separate, lower-emphasis action
+  nfcButton: {
+    marginTop: 12,
+    padding: 15,
+    borderRadius: 8,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#1E40AF",
+    backgroundColor: "transparent",
+  },
+  nfcButtonText: {
+    color: "#F5F5F5",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
   errorText: {
     color: "#F87171",
     fontSize: 14,

@@ -7,6 +7,10 @@ export default StyleSheet.create({
   headerTitleStyle: {
     color: "#F5F5F5",
   },
+  // Background behind each screen — matches the header so there is no seam/gap
+  sceneStyle: {
+    backgroundColor: "#1E1E1E",
+  },
   drawerStyle: {
     backgroundColor: "#2a2a2a",
     width: 270,

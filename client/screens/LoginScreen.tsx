@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../styles/LoginScreenStyles";
+//import { startNfcScan } from "../services/nfcService";
 
 const API_URL = "http://localhost:5001/auth/login";
 
@@ -47,6 +48,19 @@ const LoginScreen = () => {
     }
   };
 
+  // Triggers the NFC scan flow. No authentication/user matching yet —
+  // just the scan trigger plus placeholder success/failure handling.
+  const handleScanNfc = async () => {
+    /*
+    try {
+      const result = await startNfcScan();
+      console.log("NFC scan success:", result);
+    } catch (err) {
+      console.log("NFC scan failed:", err);
+    }
+      */
+  };
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -78,6 +92,11 @@ const LoginScreen = () => {
 
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Sign In</Text>
+        </TouchableOpacity>
+
+        {/* Secondary action: trigger a device NFC scan */}
+        <TouchableOpacity style={styles.nfcButton} onPress={handleScanNfc}>
+          <Text style={styles.nfcButtonText}>Scan NFC</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
