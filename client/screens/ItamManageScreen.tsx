@@ -60,7 +60,7 @@ export default function ItemManageScreen() {
   }, [item.id]);
 
   const increase = () => setQty((q) => q + 1);
-  const decrease = () => setQty((q) => Math.max(0, q - 1));
+  const decrease = () => setQty((q) => Math.max(0, q - 1)); // check if want to go below 0
 
   const handleSave = async () => {
     if (!details) return;
@@ -70,7 +70,7 @@ export default function ItemManageScreen() {
       const token = await AsyncStorage.getItem("token");
 
       const res = await fetch(
-        `http://localhost:5001/items/update/${details.id}`,
+        `${API_URL}/items/update/${details.id}`,
         {
           method: "PUT",
           headers: {

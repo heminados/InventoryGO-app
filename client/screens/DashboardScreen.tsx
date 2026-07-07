@@ -52,7 +52,7 @@ const DashboardScreen = () => {
     { id: "orders",    icon: "🛒", title: "Open Orders",       value: stats?.openOrders },
     { id: "pending",   icon: "⏳", title: "Pending Orders",    value: stats?.pendingOrders },
     { id: "lowStockAlerts",    icon: "⚠️", title: "Low Stock Alerts",  value: stats?.lowStock },
-    { id: "needCheck", icon: "🚨", title: "Required to Check", value: stats?.requiresCheck },
+    { id: "needCheck", icon: "🚨", title: "Requires Check", value: stats?.requiresCheck },
     { id: "tasks",     icon: "📝", title: "Tasks",             value: stats?.openTasks },
   ];
 

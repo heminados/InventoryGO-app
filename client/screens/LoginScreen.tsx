@@ -10,10 +10,13 @@ import {
 } from "react-native";
 import { API_URL } from "../config/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import NfcManager, {NfcTech} from 'react-native-nfc-manager';
 import styles from "../styles/LoginScreenStyles";
 //import { startNfcScan } from "../services/nfcService";
 
 const API = `${API_URL}/auth/login`;
+console.log("API URL:", API);
+console.log("API URL:", API_URL);
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -52,14 +55,17 @@ const LoginScreen = () => {
   // Triggers the NFC scan flow. No authentication/user matching yet —
   // just the scan trigger plus placeholder success/failure handling.
   const handleScanNfc = async () => {
-    /*
+    
     try {
-      const result = await startNfcScan();
-      console.log("NFC scan success:", result);
+      // Start the NFC scan
+      await NfcManager.start();
+      await NfcManager.requestTechnology(NfcTech.Ndef);
+      const tag = await NfcManager.getTag();
+      console.log("NFC Tag detected:\n", tag);
     } catch (err) {
-      console.log("NFC scan failed:", err);
+      console.log("NFC scan failed:\n", err);
     }
-      */
+      
   };
 
   return (

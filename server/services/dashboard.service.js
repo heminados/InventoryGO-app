@@ -3,7 +3,16 @@ import prisma from '../config/prisma.js';
 // Returns a single summary object used by the admin dashboard.
 // All eight values are computed in one parallel batch — no table is fully loaded into memory.
 export const getDashboardStats = async (userId) => {
-    const [stockResult, openOrders, pendingOrders, lowStockAlerts, requiredToCheck, tasks, openTasks, completedTasks] = await Promise.all([
+    const [
+        stockResult, 
+        openOrders, 
+        pendingOrders, 
+        lowStockAlerts, 
+        requiredToCheck, 
+        tasks, 
+        openTasks, 
+        completedTasks
+        ] = await Promise.all([
         // Sum of qty across all inventory items
         prisma.item.aggregate({ _sum: { qty: true } }),
 

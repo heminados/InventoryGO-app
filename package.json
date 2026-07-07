@@ -11,7 +11,8 @@
   "scripts": {
     "serverDev": "cd server && npx nodemon server.js",
     "siteDev": "cd admin && npm start",
-    "appDev": "cd client && npx expo start --ios"
+    "appDev": "cd client && npx expo start --ios",
+    "appBuild": "cd client && npx expo start --dev-client"
   },
   "repository": {
     "type": "git",

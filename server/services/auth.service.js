@@ -37,7 +37,7 @@ export const loginUser = async (email, password) => {
         },
     };
 };
-
+//-------------------------------------------------------------------------------------------
 export const adminLoginUser = async (email, password) => {
     const user = await prisma.user.findFirst({
         where: { email, role: 'ADMIN' },
@@ -67,7 +67,7 @@ export const adminLoginUser = async (email, password) => {
         },
     };
 };
-
+//-------------------------------------------------------------------------------------------
 export const registerUser = async (name, email, password) => {
     const { valid, errors } = validateUser({ name, email, password });
     if (!valid) {

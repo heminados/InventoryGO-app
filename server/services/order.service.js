@@ -81,6 +81,7 @@ export const createOrder = async (userId, customerName, customerPhone, items) =>
 
     return { status: 201, data: { message, status: orderStatus, order } };
 };
+//-----------------------------------------------------------------------------------
 
 export const getPendingOrders = async () => {
     return prisma.order.findMany({

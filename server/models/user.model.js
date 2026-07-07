@@ -7,14 +7,17 @@ export const createUser = async (user) => {
         select: { id: true, name: true, email: true, role: true, is_active: true, created_at: true },
     });
 };
+//-------------------------------------------------------------------------------------------
 
 export const getUserByEmail = async (email) => {
     return prisma.user.findUnique({ where: { email } });
 };
+//-------------------------------------------------------------------------------------------
 
 export const getUserById = async (id) => {
     return prisma.user.findUnique({ where: { id: Number(id) } });
 };
+//-------------------------------------------------------------------------------------------
 
 export const getAllUsers = async () => {
     return prisma.user.findMany({
@@ -22,6 +25,7 @@ export const getAllUsers = async () => {
         orderBy: { created_at: 'desc' },
     });
 };
+//-------------------------------------------------------------------------------------------
 
 export const updateUser = async (id, user) => {
     const { name, email, role, is_active } = user;
@@ -36,6 +40,7 @@ export const updateUser = async (id, user) => {
         select: { id: true, name: true, email: true, role: true, is_active: true, created_at: true },
     });
 };
+//-------------------------------------------------------------------------------------------
 
 export const updateUserPassword = async (id, hashedPassword) => {
     return prisma.user.update({
@@ -43,10 +48,12 @@ export const updateUserPassword = async (id, hashedPassword) => {
         data: { password: hashedPassword },
     });
 };
+//-------------------------------------------------------------------------------------------
 
 export const deleteUser = async (id) => {
     return prisma.user.delete({ where: { id: Number(id) } });
 };
+//-------------------------------------------------------------------------------------------
 
 export const validateUser = (user) => {
     const errors = {};
