@@ -15,13 +15,12 @@ import styles from "../styles/LoginScreenStyles";
 //import { startNfcScan } from "../services/nfcService";
 
 const API = `${API_URL}/auth/login`;
-console.log("API URL:", API);
-console.log("API URL:", API_URL);
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isScanning, setIsScanning] = useState(false);
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
 
@@ -55,7 +54,8 @@ const LoginScreen = () => {
   // Triggers the NFC scan flow. No authentication/user matching yet —
   // just the scan trigger plus placeholder success/failure handling.
   const handleScanNfc = async () => {
-    
+    if (isScanning) return;
+    setIsScanning(true);
     try {
       // Start the NFC scan
       await NfcManager.start();
@@ -64,6 +64,11 @@ const LoginScreen = () => {
       console.log("NFC Tag detected:\n", tag);
     } catch (err) {
       console.log("NFC scan failed:\n", err);
+    }
+    finally {
+      // Stop the NFC scan
+      NfcManager.cancelTechnologyRequest();
+      setIsScanning(false);
     }
       
   };
@@ -102,8 +107,8 @@ const LoginScreen = () => {
         </TouchableOpacity>
 
         {/* Secondary action: trigger a device NFC scan */}
-        <TouchableOpacity style={styles.nfcButton} onPress={handleScanNfc}>
-          <Text style={styles.nfcButtonText}>Scan NFC</Text>
+        <TouchableOpacity style={styles.nfcButton} onPress={handleScanNfc} disabled={isScanning}>
+          <Text style={styles.nfcButtonText}>{isScanning ? "Scanning..." : "Scan NFC"}</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
