@@ -36,11 +36,15 @@ export const addUser = async (req, res) => {
 };
 
 export const editUser = async (req, res) => {
-    const { name, email, role, is_active } = req.body;
+    const { name, email, role, is_active, nfc_token } = req.body;
     try {
-        const user = await updateUser(req.params.id, { name, email, role, is_active });
+        const user = await updateUser(req.params.id, { name, email, role, is_active, nfc_token });
         return res.status(200).json({ message: 'User updated', user });
     } catch (error) {
+        if (error.code === 'P2002') {
+            const isNfc = error.meta?.target?.includes('nfc_token');
+            return res.status(409).json({ message: isNfc ? 'This NFC tag is already linked to another user' : 'Email already exists' });
+        }
         if (error.code === 'P2025') return res.status(404).json({ message: 'User not found' });
         return res.status(500).json({ message: 'Server error', error: error.message });
     }

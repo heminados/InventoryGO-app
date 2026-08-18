@@ -157,9 +157,7 @@ export default function Inventory({ token }: { token: string }) {
 
   // ── Render ──
   return (
-    <Box>
-
-      {/* ── Page header: title + search + add button ── */}
+    <Box> 
       <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 3 }}>
         <Box>
           <Typography variant="h5" sx={{ fontWeight: 700 }}>Inventory Management</Typography>

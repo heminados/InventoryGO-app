@@ -1,13 +1,36 @@
 import prisma from '../config/prisma.js';
 
-// Returns tasks assigned to a specific user via the junction table (mobile client)
+const DAY_MS = 24 * 60 * 60 * 1000;
+const TWELVE_HOURS_MS = 12 * 60 * 60 * 1000;
+
+// Decides whether a task should still be shown in the mobile app.
+// - Completed tasks stay visible for 12 hours after completion, then drop off.
+// - Other tasks drop off once they are overdue (past the end of their due date).
+const isVisibleOnMobile = (task, now) => {
+    if (task.status === 'DONE') {
+        if (!task.completed_at) return true; // no timestamp yet — keep showing
+        return now - new Date(task.completed_at).getTime() <= TWELVE_HOURS_MS;
+    }
+    if (task.due_date) {
+        const endOfDueDate = new Date(task.due_date).getTime() + DAY_MS; // due_date is midnight -> +1 day = end of that day
+        if (now > endOfDueDate) return false;
+    }
+    return true;
+};
+
+// Returns tasks assigned to a specific user via the junction table (mobile client).
+// Overdue and long-completed tasks are hidden here so they disappear from the app UI,
+// while still remaining in the database and the admin panel.
 export const getTasksForUser = async (userId) => {
-    return prisma.task.findMany({
+    const tasks = await prisma.task.findMany({
         where: {
             assignments: { some: { user_id: userId } },
         },
         orderBy: { created_at: 'desc' },
     });
+
+    const now = Date.now();
+    return tasks.filter((task) => isVisibleOnMobile(task, now));
 };
 
 export const completeTask = async (taskId, userId) => {
@@ -31,7 +54,7 @@ export const completeTask = async (taskId, userId) => {
 
     const updated = await prisma.task.update({
         where: { id: taskId },
-        data: { status: 'DONE' },
+        data: { status: 'DONE', completed_at: new Date() },
     });
 
     return { status: 200, data: updated };
@@ -103,7 +126,15 @@ export const updateTask = async (taskId, { title, description, due_date, status,
     if (title !== undefined) updateData.title = title;
     if (description !== undefined) updateData.description = description;
     if (due_date !== undefined) updateData.due_date = due_date ? new Date(due_date) : null;
-    if (status !== undefined) updateData.status = status;
+    if (status !== undefined) {
+        updateData.status = status;
+        // Keep completed_at in sync so the mobile 12-hour rule works for admin changes too
+        if (status === 'DONE' && task.status !== 'DONE') {
+            updateData.completed_at = new Date();
+        } else if (status !== 'DONE') {
+            updateData.completed_at = null;
+        }
+    }
 
     updateData.assignments = {
         deleteMany: {},

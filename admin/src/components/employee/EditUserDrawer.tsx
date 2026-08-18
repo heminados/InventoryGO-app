@@ -91,6 +91,17 @@ export default function EditUserDrawer({
                 <MenuItem value="inactive">Inactive</MenuItem>
               </Select>
             </FormControl>
+            {/* NFC Tag ID — the tag's UID, used for NFC login. Paste the id shown */}
+            {/* on the app login screen when scanning an unregistered tag. */}
+            <TextField
+              label="NFC Tag ID"
+              size="small"
+              fullWidth
+              value={form.nfc_token}
+              onChange={(e) => onChange({ nfc_token: e.target.value.trim() })}
+              placeholder="e.g. 04a29b3fc180"
+              helperText="Leave empty to unlink this user's NFC tag."
+            />
           </Box>
 
           {/* Reset Password section — separate card to visually distinguish it from the edit form */}

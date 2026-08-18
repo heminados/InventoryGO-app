@@ -29,7 +29,7 @@ function StatCard({ icon, label, value, iconBg }: {
 }
 
 export default function TaskStats({ tasks }: { tasks: Task[] }) {
-  const totalTasks   = tasks.length;
+  const totalTasks   = tasks.length;        // ***check if true*** might be WS problem 
   const pendingTasks = tasks.filter((t) => t.status === 'OPEN').length;
   const activeTasks  = tasks.filter((t) => t.status === 'IN_PROGRESS').length;
   const doneTasks    = tasks.filter((t) => t.status === 'DONE').length;

@@ -32,7 +32,7 @@ export default function EmployeeManage({ token }: { token: string }) {
   // Edit drawer state
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [selectedUser, setSelectedUser] = React.useState<User | null>(null); // the user being edited
-  const [editForm, setEditForm] = React.useState<EditUserForm>({ name: '', email: '', role: 'EMPLOYEE', is_active: true });
+  const [editForm, setEditForm] = React.useState<EditUserForm>({ name: '', email: '', role: 'EMPLOYEE', is_active: true, nfc_token: '' });
 
   // Add user dialog state
   const [addOpen, setAddOpen] = React.useState(false);
@@ -87,7 +87,7 @@ export default function EmployeeManage({ token }: { token: string }) {
   // Opens the edit drawer and pre-fills the form with the selected user's current values
   const openEdit = (user: User) => {
     setSelectedUser(user);
-    setEditForm({ name: user.name, email: user.email, role: user.role, is_active: user.is_active });
+    setEditForm({ name: user.name, email: user.email, role: user.role, is_active: user.is_active, nfc_token: user.nfc_token ?? '' });
     setDrawerOpen(true);
   };
 

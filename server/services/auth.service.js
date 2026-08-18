@@ -68,6 +68,37 @@ export const adminLoginUser = async (email, password) => {
     };
 };
 //-------------------------------------------------------------------------------------------
+export const nfcLoginUser = async (nfcToken) => {
+    if (!nfcToken) {
+        return { status: 400, data: { message: 'NFC token is required' } };
+    }
+
+    const user = await prisma.user.findUnique({ where: { nfc_token: nfcToken } });
+
+    if (!user) {
+        return { status: 404, data: { message: 'No user is linked to this NFC tag' } };
+    }
+
+    if (!user.is_active) {
+        return { status: 403, data: { message: 'Your account has been deactivated. Please contact your manager.' } };
+    }
+
+    const token = jwt.sign(
+        { id: user.id, role: user.role },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+
+    return {
+        status: 200,
+        data: {
+            message: 'Login successful',
+            token,
+            user: { id: user.id, name: user.name, email: user.email, role: user.role },
+        },
+    };
+};
+//-------------------------------------------------------------------------------------------
 export const registerUser = async (name, email, password) => {
     const { valid, errors } = validateUser({ name, email, password });
     if (!valid) {

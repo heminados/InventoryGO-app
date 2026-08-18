@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, FlatList, Pressable, Text, View } from "react-native";
+import React, { useCallback, useMemo, useState } from "react";
+import { ActivityIndicator, FlatList, Pressable, RefreshControl, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { forceLogout } from "../utils/auth";
 import style from "../styles/TasksScreenStyle";
@@ -19,6 +20,7 @@ type Task = {
 const TasksScreen = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchTasks = useCallback(async () => {
     try {
@@ -40,8 +42,18 @@ const TasksScreen = () => {
     }
   }, []);
 
-  useEffect(() => {
-    fetchTasks();
+  // Refetch every time the screen comes into focus, so tasks assigned while the
+  // app was already open show up when the user returns to this tab.
+  useFocusEffect(
+    useCallback(() => {
+      fetchTasks();
+    }, [fetchTasks])
+  );
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchTasks();
+    setRefreshing(false);
   }, [fetchTasks]);
 
   const sortedTasks = useMemo(
@@ -101,6 +113,13 @@ const TasksScreen = () => {
           keyExtractor={(item) => String(item.id)}
           contentContainerStyle={style.listContent}
           keyboardShouldPersistTaps="handled"
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor="#F5F5F5"
+            />
+          }
           renderItem={({ item }) => {
             const done = item.status === "DONE";
             return (

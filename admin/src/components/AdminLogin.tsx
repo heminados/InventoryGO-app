@@ -11,7 +11,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 const API = 'http://localhost:5001';
 
 type AdminLoginProps = {
-  onLogin: (token: string) => void;
+  onLogin: (token: string, name: string) => void;
 };
 
 export default function AdminLogin({ onLogin }: AdminLoginProps) {
@@ -32,7 +32,7 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
       });
       const data = await response.json();
       if (response.ok) {
-        onLogin(data.token);
+        onLogin(data.token, data.user.name);
       } else {
         setError(data.message || 'Login failed.');
       }

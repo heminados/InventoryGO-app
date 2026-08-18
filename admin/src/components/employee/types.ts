@@ -11,6 +11,7 @@ export interface User {
   email: string;
   role: Role;
   is_active: boolean;
+  nfc_token: string | null;
   created_at: string;
 }
 
@@ -20,6 +21,7 @@ export interface EditUserForm {
   email: string;
   role: Role;
   is_active: boolean;
+  nfc_token: string;
 }
 
 // Values entered in the Add User dialog

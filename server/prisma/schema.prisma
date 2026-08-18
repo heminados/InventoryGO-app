@@ -42,6 +42,7 @@ model User {
   password   String
   role       Role     @default(EMPLOYEE)
   is_active  Boolean  @default(true)
+  nfc_token  String?  @unique
   created_at DateTime @default(now())
 
   orders_created   Order[]          @relation("OrderCreatedBy")
@@ -99,10 +100,11 @@ model Task {
   id          Int        @id @default(autoincrement())
   title       String
   description String?
-  status      TaskStatus @default(OPEN)
-  due_date    DateTime?
-  created_at  DateTime   @default(now())
-  created_by  Int
+  status       TaskStatus @default(OPEN)
+  due_date     DateTime?
+  completed_at DateTime?
+  created_at   DateTime   @default(now())
+  created_by   Int
 
   creator       User             @relation("TaskCreatedBy", fields: [created_by], references: [id])
   assignments   TaskAssignment[]

@@ -48,7 +48,7 @@ export default function OpenOrderScreen() {
     const fetchItems = async () => {
       try {
         const token = await AsyncStorage.getItem("token");
-        const res = await fetch(`${API}/items/getAll`, {
+        const res = await fetch(`${API_URL}/items/getAll`, {
           headers: { Authorization: token ? `Bearer ${token}` : "" },
         });
         if (res.status === 401 || res.status === 403) {
@@ -153,7 +153,7 @@ export default function OpenOrderScreen() {
     try {
       setSubmitting(true);
       const token = await AsyncStorage.getItem("token");
-      const res = await fetch(`${API}/orders/create`, {
+      const res = await fetch(`${API}/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

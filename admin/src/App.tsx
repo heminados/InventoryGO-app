@@ -12,6 +12,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import LogoutIcon from '@mui/icons-material/Logout';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import AdminPanelSettings from '@mui/icons-material/AdminPanelSettings';
 
 import AdminLogin from './components/AdminLogin';
 import HomePage from './components/HomePage';
@@ -32,6 +33,7 @@ const NAV_ITEMS = [
   { label: 'Tasks', icon: <AssignmentIcon />, to: '/tasks' },
   { label: 'User Management', icon: <PeopleIcon />, to: '/employees' },
   { label: 'Reports', icon: <AssessmentIcon />, to: '/reports' },
+  { label: 'Back Office', icon: <AdminPanelSettings />, to: '/back-office' }, // add backoffice link and icon (for offline)
 ];
 
 // A single sidebar link. Highlights itself blue when its route is active.
@@ -67,7 +69,7 @@ function SidebarNavItem({ label, icon, to }: { label: string; icon: React.ReactN
 
 // The main shell rendered after login: permanent sidebar on the left, top bar + page content on the right.
 // Receives the JWT token (to pass down to pages that need it) and a logout callback.
-function AdminLayout({ token, onLogout }: { token: string; onLogout: () => void }) {
+function AdminLayout({ token, name, onLogout }: { token: string; name: string; onLogout: () => void }) {
   const navigate = useNavigate();
 
   // Every time AdminLayout mounts it means the user just logged in (the token only lives in state,
@@ -144,8 +146,10 @@ function AdminLayout({ token, onLogout }: { token: string; onLogout: () => void 
             </IconButton>
           </Tooltip>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main', fontSize: 14 }}>A</Avatar>
-            <Typography variant="body2" sx={{ fontWeight: 600 }}>Admin</Typography>
+            <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main', fontSize: 14 }}>
+              {name ? name.charAt(0).toUpperCase() : 'A'}
+            </Avatar>
+            <Typography variant="body2" sx={{ fontWeight: 600 }}>{name || 'Admin'}</Typography>
           </Box>
         </Box>
 
@@ -171,16 +175,24 @@ function AdminLayout({ token, onLogout }: { token: string; onLogout: () => void 
 // Once the user logs in, renders the full admin layout.
 function App() {
   const [adminToken, setAdminToken] = React.useState('');
+  const [adminName, setAdminName] = React.useState('');
 
   if (!adminToken) {
-    // onLogin receives the JWT from AdminLogin and stores it here
-    return <AdminLogin onLogin={(token) => setAdminToken(token)} />;
+    // onLogin receives the JWT and the manager's name from AdminLogin and stores them here
+    return (
+      <AdminLogin
+        onLogin={(token, name) => {
+          setAdminToken(token);
+          setAdminName(name);
+        }}
+      />
+    );
   }
 
   return (
     <BrowserRouter>
       {/* AdminLayout needs BrowserRouter for NavLink and useLocation to work */}
-      <AdminLayout token={adminToken} onLogout={() => setAdminToken('')} />
+      <AdminLayout token={adminToken} name={adminName} onLogout={() => setAdminToken('')} />
     </BrowserRouter>
   );
 }

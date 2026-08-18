@@ -10,11 +10,11 @@ import {
 } from "react-native";
 import { API_URL } from "../config/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import NfcManager, {NfcTech} from 'react-native-nfc-manager';
 import styles from "../styles/LoginScreenStyles";
-//import { startNfcScan } from "../services/nfcService";
+import { startNfcScan } from "../services/nfcService";
 
 const API = `${API_URL}/auth/login`;
+const NFC_API = `${API_URL}/auth/nfc-login`;
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -51,26 +51,37 @@ const LoginScreen = () => {
     }
   };
 
-  // Triggers the NFC scan flow. No authentication/user matching yet —
-  // just the scan trigger plus placeholder success/failure handling.
+  // Scans an NFC tag and logs in with its unique id (matched against users.nfc_token on the server)
   const handleScanNfc = async () => {
     if (isScanning) return;
     setIsScanning(true);
+    setError("");
     try {
-      // Start the NFC scan
-      await NfcManager.start();
-      await NfcManager.requestTechnology(NfcTech.Ndef);
-      const tag = await NfcManager.getTag();
-      console.log("NFC Tag detected:\n", tag);
-    } catch (err) {
-      console.log("NFC scan failed:\n", err);
-    }
-    finally {
-      // Stop the NFC scan
-      NfcManager.cancelTechnologyRequest();
+      const { tagId } = await startNfcScan();
+      if (!tagId) {
+        setError("Could not read this NFC tag. Please try again.");
+        return;
+      }
+      const response = await fetch(NFC_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nfcToken: tagId }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        // Show the scanned tag id so it can be registered to a user
+        // (paste it into the user's "NFC Tag ID" field in the admin panel).
+        setError(`${data.message || "NFC login failed."}\nTag ID: ${tagId}`);
+        return; 
+      }
+      await AsyncStorage.setItem("token", data.token);
+      navigation.reset({ index: 0, routes: [{ name: "MainDrawer" }] });
+    } catch {
+      // Covers scan cancel / NFC unavailable / network errors
+      setError("NFC login failed. Please try again.");
+    } finally {
       setIsScanning(false);
     }
-      
   };
 
   return (

@@ -21,23 +21,24 @@ export const getUserById = async (id) => {
 
 export const getAllUsers = async () => {
     return prisma.user.findMany({
-        select: { id: true, name: true, email: true, role: true, is_active: true, created_at: true },
+        select: { id: true, name: true, email: true, role: true, is_active: true, nfc_token: true, created_at: true },
         orderBy: { created_at: 'desc' },
     });
 };
 //-------------------------------------------------------------------------------------------
 
 export const updateUser = async (id, user) => {
-    const { name, email, role, is_active } = user;
+    const { name, email, role, is_active, nfc_token } = user;
     const data = {};
     if (name !== undefined) data.name = name;
     if (email !== undefined) data.email = email;
     if (role !== undefined) data.role = role;
     if (is_active !== undefined) data.is_active = is_active;
+    if (nfc_token !== undefined) data.nfc_token = nfc_token || null;
     return prisma.user.update({
         where: { id: Number(id) },
         data,
-        select: { id: true, name: true, email: true, role: true, is_active: true, created_at: true },
+        select: { id: true, name: true, email: true, role: true, is_active: true, nfc_token: true, created_at: true },
     });
 };
 //-------------------------------------------------------------------------------------------
