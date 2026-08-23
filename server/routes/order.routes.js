@@ -2,10 +2,12 @@ import express from 'express';
 import * as orderController from '../controllers/order.controller.js';
 import { verifyToken } from '../middleware/auth.middleware.js';
 import { requireAdmin } from '../middleware/role.middleware.js';
+import { checkSystemEnabled } from '../middleware/system.middleware.js';
 
 const router = express.Router();
 
 router.use(verifyToken);
+router.use(checkSystemEnabled);
 
 // Mobile app routes — any authenticated user
 router.post('/create', orderController.createOrder);

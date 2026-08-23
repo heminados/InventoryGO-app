@@ -223,6 +223,21 @@ async function main() {
         console.log(`  Tasks:     ${taskData.length} records created`);
     }
 
+    // ── 4. System settings ────────────────────────────────────────────────────
+
+    const settingDefaults = [
+        { key: 'system_enabled',       value: true },
+        { key: 'offline_mode_enabled', value: true },
+    ];
+    for (const setting of settingDefaults) {
+        await prisma.systemSetting.upsert({
+            where:  { key: setting.key },
+            update: {},
+            create: setting,
+        });
+    }
+    console.log(`  Settings:  ${settingDefaults.length} records upserted`);
+
     console.log('Seeding complete.');
 }
 

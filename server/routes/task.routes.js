@@ -2,10 +2,12 @@ import express from 'express';
 import * as taskController from '../controllers/task.controller.js';
 import { verifyToken } from '../middleware/auth.middleware.js';
 import { requireAdmin } from '../middleware/role.middleware.js';
+import { checkSystemEnabled } from '../middleware/system.middleware.js';
 
 const router = express.Router();
 
 router.use(verifyToken);
+router.use(checkSystemEnabled);
 
 // Employee routes — any authenticated user
 router.get('/my', taskController.getMyTasks);

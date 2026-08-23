@@ -7,6 +7,7 @@ import orderRoutes from './routes/order.routes.js';
 import dashboardRoutes from './routes/dashboard.routes.js';
 import userRoutes from './routes/user.routes.js';
 import reportRoutes from './routes/report.routes.js';
+import settingsRoutes from './routes/settings.routes.js';
 
 const app = express();
 
@@ -23,5 +24,6 @@ app.use('/orders', orderRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/users', userRoutes);
 app.use('/reports', reportRoutes);
+app.use('/settings', settingsRoutes);
 
 export default app;

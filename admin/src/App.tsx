@@ -21,6 +21,7 @@ import TaskManage from './components/TaskManage';
 import ManageItems from './components/Inventory';
 import OrderManage from './components/OrderManage';
 import Reports from './components/Reports';
+import BackOffice from './components/BackOffice';
 
 // Width of the left sidebar in pixels
 const SIDEBAR_WIDTH = 220;
@@ -163,6 +164,7 @@ function AdminLayout({ token, name, onLogout }: { token: string; name: string; o
             <Route path="/employees" element={<EmployeeManage token={token} />} />
             <Route path="/items" element={<ManageItems token={token} />} />
             <Route path="/reports" element={<Reports token={token} />} />
+            <Route path="/back-office" element={<BackOffice token={token} />} />
           </Routes>
         </Box>
       </Box>

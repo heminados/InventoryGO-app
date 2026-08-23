@@ -151,3 +151,8 @@ model Report {
 
   @@index([issued_by])
 }
+
+model SystemSetting {
+  key   String  @id
+  value Boolean
+}

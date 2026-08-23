@@ -1,10 +1,12 @@
 import express from 'express';
 import * as itemController from '../controllers/item.controller.js';
 import { verifyToken } from '../middleware/auth.middleware.js';
+import { checkSystemEnabled } from '../middleware/system.middleware.js';
 
 const router = express.Router();
 
 router.use(verifyToken);
+router.use(checkSystemEnabled);
 
 // -> item/add
 router.post('/add', itemController.addItem);

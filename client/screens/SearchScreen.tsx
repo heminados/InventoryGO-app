@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   FlatList,
   Keyboard,
@@ -7,11 +7,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import styles from "../styles/SearchScreenStyle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { forceLogout } from "../utils/auth";
 import { API_URL } from "../config/api";
+import { apiClient } from "../services/apiClient";
 
 type Item = {
   id: number;
@@ -56,36 +57,40 @@ const API = `${API_URL}/items/getAll`;
     );
   }, [query, items]);
 
-  useEffect(() => {
-    const fetchItems = async () => {
-      try {
-        setLoading(true);
-        const token = await AsyncStorage.getItem("token");
+  const fetchItems = useCallback(async () => {
+    try {
+      setLoading(true);
+      const token = await AsyncStorage.getItem("token");
 
-        const res = await fetch(API, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-          },
-        });
+      const res = await apiClient(API, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+      });
 
-        if (res.status === 401 || res.status === 403) {
-          const errData = await res.json().catch(() => ({}));
-          forceLogout(errData.message);
-          return;
-        }
-        const data = await res.json();
-        setItems(data);
-      } catch (err) {
-        console.error("Failed to fetch items:", err);
-      } finally {
-        setLoading(false);
+      if (res.status === 401 || res.status === 403) {
+        const errData = await res.json().catch(() => ({}));
+        forceLogout(errData.message);
+        return;
       }
-    };
-
-    fetchItems();
+      const data = await res.json();
+      setItems(data);
+    } catch (err) {
+      console.error("Failed to fetch items:", err);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  // Refetch every time the screen comes into focus, so item changes made
+  // elsewhere (e.g. in ItemManage) show up when the user returns to this tab.
+  useFocusEffect(
+    useCallback(() => {
+      fetchItems();
+    }, [fetchItems])
+  );
 
   return (
     <View style={styles.root}>

@@ -8,7 +8,7 @@ const TWELVE_HOURS_MS = 12 * 60 * 60 * 1000;
 // - Other tasks drop off once they are overdue (past the end of their due date).
 const isVisibleOnMobile = (task, now) => {
     if (task.status === 'DONE') {
-        if (!task.completed_at) return true; // no timestamp yet — keep showing
+        if (!task.completed_at) return false; // no completion timestamp (old data) — hide
         return now - new Date(task.completed_at).getTime() <= TWELVE_HOURS_MS;
     }
     if (task.due_date) {

@@ -9,10 +9,17 @@ import OpenOrderScreen from "../screens/OpenOrderScreen";
 import styles from "../styles/MainDrawerStyle";
 import { MaterialIcons } from "@expo/vector-icons";
 import TasksScreen from "../screens/TasksScreen";
+import { refreshSystemSettings } from "../services/apiClient";
 
 const Drawer = createDrawerNavigator();
 
 export default function MainDrawer() {
+  // MainDrawer mounts right after every successful login (password or NFC),
+  // so this is the single place to load the Back Office system flags.
+  React.useEffect(() => {
+    AsyncStorage.getItem("token").then((token) => refreshSystemSettings(token ?? ""));
+  }, []);
+
   return (
     <Drawer.Navigator
       initialRouteName="Dashboard"

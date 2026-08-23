@@ -1,14 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/LoginScreen";
 import MainDrawer from "./navigation/MainDrawer";
 import ItemManageScreen from "./screens/ItamManageScreen";
 import { navigationRef } from "./utils/auth";
+import { initDatabase } from "./db/database";
+import { startSyncListener } from "./services/syncService";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  // Offline layer: open the local DB, then replay queued writes on reconnect
+  useEffect(() => {
+    initDatabase().then(startSyncListener).catch(console.error);
+  }, []);
+
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator

@@ -11,6 +11,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../styles/ItamManageScreenStyle";
 import { API_URL } from "../config/api";
+import { apiClient } from "../services/apiClient";
 
 type ItemDetails = {
   id: number;
@@ -38,7 +39,7 @@ export default function ItemManageScreen() {
     const fetchDetails = async () => {
       try {
         const token = await AsyncStorage.getItem("token");
-        const res = await fetch(
+        const res = await apiClient(
           `${API_URL}/items/details/${item.id}`,
           { headers: { Authorization: token ? `Bearer ${token}` : "" } }
         );
@@ -69,7 +70,7 @@ export default function ItemManageScreen() {
       setSaving(true);
       const token = await AsyncStorage.getItem("token");
 
-      const res = await fetch(
+      const res = await apiClient(
         `${API_URL}/items/update/${details.id}`,
         {
           method: "PUT",
